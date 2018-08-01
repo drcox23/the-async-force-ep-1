@@ -8,6 +8,7 @@ reqHelper = url => {
   return newReq;
 };
 
+//people
 firstRequest = reqHelper("https://swapi.co/api/people/4/");
 firstRequest.addEventListener("load", function(res) {
   console.log(res);
@@ -42,6 +43,7 @@ secondRequest.addEventListener("load", function(res) {
   });
 });
 
+// films
 anotherRequest = reqHelper("https://swapi.co/api/films/");
 anotherRequest.addEventListener("load", function(res) {
   console.log("response3: ", JSON.parse(res.currentTarget.response));
@@ -53,6 +55,26 @@ anotherRequest.addEventListener("load", function(res) {
     let filmBullet = document.createElement("li");
     filmBullet.innerHTML = films[i].title;
     filmList.appendChild(filmBullet);
+
+    let filmPlanets = document.createElement("ul");
+    filmPlanets.className = "filmPlanets";
+    filmPlanets.innerHTML = "Planets: ";
+    filmList.appendChild(filmPlanets);
+
+    for (let j = 0; j < films[i].planets.length; j++) {
+      let planetLink = films[i].planets[j];
+
+      daPlanets = reqHelper(planetLink);
+      daPlanets.addEventListener("load", function(req) {
+        let planetName = document.createElement("li");
+        planetName.className = "planetName";
+        planetName.innerHTML = JSON.parse(req.currentTarget.response).name;
+        // console.log("***: ", planetName);
+        filmPlanets.appendChild(planetName);
+      });
+      // daPlanets.open("GET", planetLink);
+      // daPlanets.send();
+    }
   }
 });
 
